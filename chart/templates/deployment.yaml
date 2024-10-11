@@ -1,43 +1,58 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "resource-tree-handler.fullname" . }}-deployment
+  name: {{ include "resource-tree-handler.fullname" . }}
   labels:
-    app: resource-tree-handler
-  {{- include "resource-tree-handler.labels" . | nindent 4 }}
+    {{- include "resource-tree-handler.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.webservice.replicaCount }}
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
-      app: resource-tree-handler
-    {{- include "resource-tree-handler.selectorLabels" . | nindent 6 }}
+      {{- include "resource-tree-handler.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        app: resource-tree-handler
-      {{- include "resource-tree-handler.selectorLabels" . | nindent 8 }}
-    spec:
-      containers:
-      - env:
-        - name: CONFIG_PATH
-          value: {{ quote .Values.webservice.configMountPath }}
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: "cluster.local"
-        image: {{ .Values.webservice.image.repository }}:{{ .Values.webservice.image.tag
-          | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.webservice.imagePullPolicy }}
-        name: webservice
-        ports:
-        - containerPort: 8084
-        resources: {{- toYaml .Values.webservice.resources
-          | nindent 10 }}
-        {{- with .Values.webservice.volumeMounts }}
-        volumeMounts:
-          {{- toYaml . | nindent 10 }}
+        {{- include "resource-tree-handler.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
-      imagePullSecrets: {{- toYaml .Values.imagePullSecrets
-          | nindent 6 }}
-      serviceAccountName: {{ include "resource-tree-handler.fullname" . }}-secret-viewer
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "resource-tree-handler.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "resource-tree-handler.fullname" . }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "resource-tree-handler.fullname" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

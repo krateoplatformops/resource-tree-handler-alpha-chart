@@ -1,9 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: resource-tree-handler-webservice-config
+  name: {{ include "resource-tree-handler.fullname" . }}
   labels:
   {{- include "resource-tree-handler.labels" . | nindent 4 }}
 data:
-  config.yaml: |
-    WebServicePort: 8084
+  RESOURCE_TREE_HANDLER_PORT: "{{ .Values.service.port }}"
