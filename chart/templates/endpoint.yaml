@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ include "resource-tree-handler.fullname" . }}-endpoint
+stringData:
+  server-url: http://{{ include "resource-tree-handler.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}
+  insecure: "true"
