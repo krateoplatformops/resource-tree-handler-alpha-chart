@@ -6,3 +6,4 @@ metadata:
   {{- include "resource-tree-handler.labels" . | nindent 4 }}
 data:
   RESOURCE_TREE_HANDLER_PORT: "{{ .Values.service.port }}"
+  DEBUG_LEVEL: "{{ .Values.debugLevel }}"
