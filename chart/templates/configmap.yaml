@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "resource-tree-handler.fullname" . }}
+  name: {{ include "resource-tree-handler-alpha.fullname" . }}
   labels:
-  {{- include "resource-tree-handler.labels" . | nindent 4 }}
+  {{- include "resource-tree-handler-alpha.labels" . | nindent 4 }}
 data:
   RESOURCE_TREE_HANDLER_API_PORT: "{{ .Values.service.port }}"
   DEBUG_LEVEL: "{{ .Values.debugLevel }}"

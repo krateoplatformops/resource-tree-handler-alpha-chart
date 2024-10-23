@@ -1,5 +1,5 @@
 apiVersion: v2
-name: resource-tree-handler
+name: resource-tree-handler-alpha
 description: Krateo Resource Tree Handler
 # A chart can be either an 'application' or a 'library' chart.
 #

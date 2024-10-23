@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "resource-tree-handler.fullname" . }}
+  name: {{ include "resource-tree-handler-alpha.fullname" . }}
   labels:
-    {{- include "resource-tree-handler.labels" . | nindent 4 }}
+    {{- include "resource-tree-handler-alpha.labels" . | nindent 4 }}
   annotations:
     {{- with .Values.service.annotations }}
     {{- toYaml . | nindent 4 }}
@@ -19,4 +19,4 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
   selector:
-    {{- include "resource-tree-handler.selectorLabels" . | nindent 4 }}
+    {{- include "resource-tree-handler-alpha.selectorLabels" . | nindent 4 }}
