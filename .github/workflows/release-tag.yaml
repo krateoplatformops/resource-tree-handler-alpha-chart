@@ -13,7 +13,7 @@ jobs:
         uses: tdemin/find-latest-tag@v1
         id: app_version
         with:
-          repo: https://${{ secrets.HELM_CHARTS_BOT }}@github.com/krateoplatformops/resource-tree-handler.git
+          repo: https://${{ secrets.HELM_CHARTS_BOT }}@github.com/krateoplatformops/resource-tree-handler-alpha.git
 
       - name: Checkout
         uses: actions/checkout@v3
