@@ -7,5 +7,5 @@ This is a [Helm Chart](https://helm.sh/docs/topics/charts/) for [Krateo Resource
 ```sh
 $ helm repo add krateo https://charts.krateo.io
 $ helm repo update krateo
-$ helm install resource-tree-handler krateo/resource-tree-handler
+$ helm install resource-tree-handler-alpha krateo/resource-tree-handler-alpha
 ```
